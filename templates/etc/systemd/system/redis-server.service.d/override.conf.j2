@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+
+[Service]
+{% for line in redis_systemd_overrides %}
+{{ line }}
+{% endfor %}
+{% if redis_dir not in ['/var/lib/redis', '/var/lib/redis/'] %}
+ReadWritePaths=-{{ redis_dir }}
+{% endif %}
+{% if redis_logfile | dirname not in ['/var/log/redis', '/var/log/redis/'] %}
+ReadWritePaths=-{{ redis_logfile | dirname }}
+{% endif %}
+{% if redis_pidfile | dirname not in ['/run/redis', '/run/redis/'] %}
+ReadWritePaths=-{{ redis_pidfile | dirname }}
+{% endif %}

@@ -1,0 +1,27 @@
+---
+redis_packages:
+  - redis-server
+  - redis-tools
+
+redis_packages_state: present
+
+redis_user: redis
+redis_group: redis
+
+redis_bind: "127.0.0.1 -::1"
+redis_protected_mode: "yes"
+redis_port: 6379
+
+redis_daemonize: "yes"
+redis_supervised: "systemd"
+
+redis_pidfile: "/run/redis/redis-server.pid"
+redis_loglevel: notice
+redis_logfile: /var/log/redis/redis-server.log
+
+redis_databases: 16
+
+redis_dir: "/var/lib/redis"
+
+redis_systemd_overrides:
+  - ProtectSystem=full

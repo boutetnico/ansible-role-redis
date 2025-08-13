@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+
+bind {{ redis_bind }}
+
+protected-mode {{ redis_protected_mode }}
+
+daemonize {{ redis_daemonize }}
+
+supervised {{ redis_supervised }}
+
+port {{ redis_port }}
+
+pidfile {{ redis_pidfile }}
+
+loglevel {{ redis_loglevel }}
+
+logfile {{ redis_logfile }}
+
+databases {{ redis_databases }}
+
+dir {{ redis_dir }}

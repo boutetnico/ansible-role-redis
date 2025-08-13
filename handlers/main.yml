@@ -1,0 +1,9 @@
+---
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart redis
+  ansible.builtin.service:
+    name: redis-server
+    state: restarted

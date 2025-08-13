@@ -1,0 +1,81 @@
+---
+- name: Ensure redis group exists
+  ansible.builtin.group:
+    name: "{{ redis_group }}"
+    state: present
+    system: true
+
+- name: Ensure redis user exists
+  ansible.builtin.user:
+    create_home: false
+    group: "{{ redis_group }}"
+    name: "{{ redis_user }}"
+    state: present
+    system: true
+
+- name: Ensure redis data directory exist
+  ansible.builtin.file:
+    group: "{{ redis_group }}"
+    mode: "0750"
+    owner: "{{ redis_user }}"
+    path: "{{ redis_dir }}"
+    state: directory
+
+- name: Ensure redis log directory exist
+  ansible.builtin.file:
+    group: "adm"
+    mode: "2750"
+    owner: "{{ redis_user }}"
+    path: "{{ redis_logfile | dirname }}"
+    state: directory
+
+- name: Ensure pid file directory exist
+  ansible.builtin.file:
+    group: "{{ redis_group }}"
+    mode: "2755"
+    owner: "{{ redis_user }}"
+    path: "{{ redis_pidfile | dirname }}"
+    state: directory
+
+- name: Ensure redis is installed
+  ansible.builtin.apt:
+    name: "{{ redis_packages }}"
+    state: "{{ redis_packages_state }}"
+    update_cache: true
+
+- name: Setup redis conf
+  ansible.builtin.template:
+    dest: /etc/redis/redis.conf
+    group: "{{ redis_group }}"
+    mode: "0640"
+    owner: "{{ redis_user }}"
+    src: etc/redis/redis.conf.j2
+  notify:
+    - Restart redis
+
+- name: Ensure systemd redis directory exists
+  ansible.builtin.file:
+    group: root
+    mode: "0755"
+    owner: root
+    path: /etc/systemd/system/redis-server.service.d
+    state: directory
+
+- name: Ensure override.conf is installed
+  ansible.builtin.template:
+    dest: /etc/systemd/system/redis-server.service.d/override.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: etc/systemd/system/redis-server.service.d/override.conf.j2
+  notify:
+    - Reload systemd daemon
+
+- name: Ensure systemd daemon is reloaded
+  ansible.builtin.meta: "flush_handlers"
+
+- name: Ensure redis is started and starts on boot
+  ansible.builtin.service:
+    enabled: true
+    name: redis-server
+    state: started
