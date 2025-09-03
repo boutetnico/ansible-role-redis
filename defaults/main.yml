@@ -13,15 +13,15 @@ redis_protected_mode: true
 redis_port: 6379
 
 redis_daemonize: false
-redis_supervised: "systemd"
+redis_supervised: systemd
 
-redis_pidfile: "/run/redis/redis-server.pid"
+redis_pidfile: /run/redis/redis-server.pid
 redis_loglevel: notice
 redis_logfile: /var/log/redis/redis-server.log
 
 redis_databases: 16
 
-redis_dir: "/var/lib/redis"
+redis_dir: /var/lib/redis
 
 redis_systemd_overrides:
   - ProtectSystem=full
