@@ -8,11 +8,11 @@ redis_packages_state: present
 redis_user: redis
 redis_group: redis
 
-redis_bind: "127.0.0.1 -::1"
-redis_protected_mode: "yes"
+redis_bind: "127.0.0.1 ::1"
+redis_protected_mode: true
 redis_port: 6379
 
-redis_daemonize: "yes"
+redis_daemonize: false
 redis_supervised: "systemd"
 
 redis_pidfile: "/run/redis/redis-server.pid"

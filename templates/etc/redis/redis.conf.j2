@@ -2,9 +2,9 @@
 
 bind {{ redis_bind }}
 
-protected-mode {{ redis_protected_mode }}
+protected-mode {{ redis_protected_mode | ternary('yes','no') }}
 
-daemonize {{ redis_daemonize }}
+daemonize {{ redis_daemonize | ternary('yes','no') }}
 
 supervised {{ redis_supervised }}
 

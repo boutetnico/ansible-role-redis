@@ -28,10 +28,10 @@ Role Variables
 | redis_packages_state         | true     | `present`                         | string    | Use `latest` to update.     |
 | redis_user                   | true     | `redis`                           | string    |                             |
 | redis_group                  | true     | `redis`                           | string    |                             |
-| redis_bind                   | true     | `127.0.0.1 -::1`                  | string    |                             |
-| redis_protected_mode         | true     | `yes`                             | string    |                             |
+| redis_bind                   | true     | `127.0.0.1 ::1`                   | string    |                             |
+| redis_protected_mode         | true     | `true`                            | bool      |                             |
 | redis_port                   | true     | `6379`                            | int       |                             |
-| redis_daemonize              | true     | `yes`                             | string    |                             |
+| redis_daemonize              | true     | `false`                           | bool      |                             |
 | redis_supervised             | true     | `systemd`                         | string    |                             |
 | redis_pidfile                | true     | `/run/redis/redis-server.pid`     | string    |                             |
 | redis_loglevel               | true     | `notice`                          | string    |                             |

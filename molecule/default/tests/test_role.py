@@ -20,6 +20,17 @@ def test_redis_service(host):
     assert svc.is_running
 
 
+def test_redis_listening(host):
+    sock = host.socket("tcp://127.0.0.1:6379")
+    assert sock.is_listening
+
+
+def test_redis_ping(host):
+    cmd = host.run("redis-cli ping")
+    assert cmd.rc == 0
+    assert "PONG" in cmd.stdout
+
+
 @pytest.mark.parametrize(
     "path,mode,user,group",
     [
@@ -40,17 +51,18 @@ def test_directories(host, path, mode, user, group):
 def test_redis_conf(host):
     f = host.file("/etc/redis/redis.conf")
     assert f.exists
-    if f.user == "redis":
-        assert f.group == "redis"
-        assert f.mode == 0o640
-    else:
-        pytest.skip("redis.conf not managed by role")
+    assert f.user == "redis"
+    assert f.group == "redis"
+    assert f.mode == 0o640
+    assert f.contains(r"^bind 127\.0\.0\.1 ::1$")
+    assert f.contains(r"^supervised systemd$")
+    assert f.contains(r"^daemonize no$")
 
 
 def test_override_conf(host):
     f = host.file("/etc/systemd/system/redis-server.service.d/override.conf")
-    if not f.exists:
-        pytest.skip("no systemd override installed by role")
+    assert f.exists
     assert f.user == "root"
     assert f.group == "root"
     assert f.mode == 0o644
+    assert f.contains(r"^ProtectSystem=full$")

@@ -50,8 +50,7 @@
     mode: "0640"
     owner: "{{ redis_user }}"
     src: etc/redis/redis.conf.j2
-  notify:
-    - Restart redis
+  notify: Restart redis
 
 - name: Ensure systemd redis directory exists
   ansible.builtin.file:
@@ -68,11 +67,10 @@
     mode: "0644"
     owner: root
     src: etc/systemd/system/redis-server.service.d/override.conf.j2
-  notify:
-    - Reload systemd daemon
+  notify: Reload systemd daemon
 
-- name: Ensure systemd daemon is reloaded
-  ansible.builtin.meta: "flush_handlers"
+- name: Apply handlers before starting service
+  ansible.builtin.meta: flush_handlers
 
 - name: Ensure redis is started and starts on boot
   ansible.builtin.service:
